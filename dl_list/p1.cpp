@@ -6,8 +6,8 @@ int main() {
   for (auto &&el : ls) {
     std::cout << el << std::endl;
   }
-
-  ls.insert(ls.end(), 999);
+  std::list<int> k{1};
+  ls.erase(ls.end());
 
   for (auto &&el : ls) {
     std::cout << el << std::endl;

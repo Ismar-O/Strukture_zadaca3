@@ -172,10 +172,29 @@ public:
       pop_back();
       return;
     }
-    position->previous_->next_ = position->next_;
-    position->next_->previous_ = position->previous_;
-    delete position;
+    position.p_->previous_->next_ = position.p_->next_;
+    position.p_->next_->previous_ = position.p_->previous_;
+    delete position.p_;
     size_--;
+  }
+
+  template <typename U> void remove_if(U predicate) {
+    auto it = head_;
+    while (it != nullptr) {
+      auto temp = it;
+      it = it->next_;
+      if (predicate(temp->value_)) {
+        erase(temp);
+      }
+    }
+  }
+
+  void reverse() {
+    auto temp = begin();
+    while (temp != end()) {
+
+      temp = temp->next_;
+    }
   }
 
   // TODO VRATITI NODE U PRIVATE TODO
