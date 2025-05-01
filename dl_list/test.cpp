@@ -281,24 +281,23 @@ TEST_CASE("Erase") {
                  *(it++) == 'a' && *(it++) == 'r';
   CHECK(is_true);
 }
-/*
-TEST_CASE("Rotate") {
-  MojVektor<int> vec;
-  for (auto i = 0; i < 10; i++) {
-    vec.push_back(i);
-  }
-  vec.rotate();
 
+TEST_CASE("Reverse") {
+  list<int> ls;
+  for (auto i = 0; i < 10; i++) {
+    ls.push_back(i);
+  }
+  ls.reverse();
   bool check = true;
+  auto it = ls.begin();
   for (auto i = 0; i < 10; ++i) {
-    if (vec[i] != 9 - i) {
+    if (*(it++) != 9 - i) {
       check = false;
     }
   }
   CHECK(check);
 }
 
-*/
 TEST_CASE("remove if") {
   list<int> list{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
   list.remove_if([](int &el) { return el % 2 == 1; });
@@ -312,4 +311,72 @@ TEST_CASE("remove if") {
     }
   }
   CHECK(is_true);
+}
+
+TEST_CASE("Split front") {
+  list<int> ls1{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+  auto it = ls1.begin();
+  it++;
+  it++;
+  it++;
+  // it pokazuje na 4;
+  auto ls2 = ls1.split_front(it);
+  bool check1 = true;
+  auto it1 = ls1.begin();
+  for (int i = 4; i < 11; i++) {
+    if (*(it1++) != i) {
+      check1 = false;
+    }
+  }
+  CHECK(check1);
+
+  bool check2 = true;
+  auto it2 = ls2.begin();
+  for (int i = 1; i < 4; i++) {
+    if (*(it2++) != i) {
+      check2 = false;
+    }
+  }
+  CHECK(check2);
+
+  CHECK(ls1.size() == 7);
+  CHECK(ls2.size() == 3);
+  auto head_1 = ListTestAccess<int>::getHead(ls1);
+  auto tail_1 = ListTestAccess<int>::getTail(ls1);
+  CHECK(tail_1->next_ == nullptr);
+  CHECK(head_1->previous_ == nullptr);
+
+  auto head_2 = ListTestAccess<int>::getHead(ls2);
+  auto tail_2 = ListTestAccess<int>::getTail(ls2);
+  CHECK(tail_2->next_ == nullptr);
+  CHECK(head_2->previous_ == nullptr);
+}
+
+TEST_CASE("Split front iterator on first el") {
+  list<int> ls1{1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
+  auto it = ls1.begin();
+  // it pokazuje na 1;
+  auto ls2 = ls1.split_front(it);
+  bool check1 = true;
+  auto it1 = ls1.begin();
+  for (int i = 1; i < 11; i++) {
+    if (*(it1++) != i) {
+      check1 = false;
+    }
+  }
+  CHECK(check1);
+
+  CHECK(ls1.size() == 10);
+  CHECK(ls2.size() == 0);
+
+  auto head_1 = ListTestAccess<int>::getHead(ls1);
+  auto tail_1 = ListTestAccess<int>::getTail(ls1);
+
+  CHECK(tail_1->next_ == nullptr);
+  CHECK(head_1->previous_ == nullptr);
+
+  auto head_2 = ListTestAccess<int>::getHead(ls2);
+  auto tail_2 = ListTestAccess<int>::getTail(ls2);
+  CHECK(tail_2 == nullptr);
+  CHECK(head_2 == nullptr);
 }

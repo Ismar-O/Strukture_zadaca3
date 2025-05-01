@@ -1,8 +1,8 @@
 #pragma once
 #include <initializer_list>
-#include <iostream>
 #include <iterator>
 
+// Deklaracija potrebna za koristenje private clanova u testovima
 template <typename T> struct ListTestAccess;
 
 template <typename T> class list {
@@ -190,14 +190,41 @@ public:
   }
 
   void reverse() {
-    auto temp = begin();
-    while (temp != end()) {
-
-      temp = temp->next_;
+    auto temp = head_;
+    std::swap(tail_, head_);
+    while (temp != nullptr) {
+      auto oldNext = temp->next_;
+      temp->next_ = temp->previous_;
+      temp->previous_ = oldNext;
+      temp = oldNext;
     }
   }
 
-  // TODO VRATITI NODE U PRIVATE TODO
+  list<T> split_front(Iterator position) {
+    list<T> toReturn;
+    if (position == head_) {
+      return toReturn;
+    }
+    toReturn.head_ = head_;
+    toReturn.tail_ = position.p_->previous_;
+    toReturn.tail_->next_ = nullptr;
+
+    head_ = position.p_;
+    head_->previous_ = nullptr;
+
+    // Odredjujemo size
+    auto temp = toReturn.head_;
+    size_t br = 0;
+    while (temp != nullptr) {
+      br++;
+      temp = temp->next_;
+    }
+    toReturn.size_ = br;
+    size_ = size_ - br;
+    return toReturn;
+  }
+
+private:
   class node {
   public:
     node(const T &element) : value_{element} {}
@@ -208,6 +235,7 @@ public:
     node *previous_ = nullptr;
   };
 
+public:
   class Iterator {
   public:
     using iterator_category = std::bidirectional_iterator_tag;
@@ -260,6 +288,7 @@ private:
   size_t size_ = 0;
 };
 
+// Definicije funkcija potrebnih za koristenje private clanova u testovima
 template <typename T> struct ListTestAccess {
   static typename list<T>::node *getHead(const list<T> &list) {
     return list.head_;
