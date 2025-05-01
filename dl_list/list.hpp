@@ -24,19 +24,17 @@ public:
     }
   }
 
-  list(list &&other)
-      : head_{other.head_}, tail_{other.tail_}, size_{other.size_} {
-    other.tail_ = other.head_ = 0;
-    other.size_ = 0;
-  }
-  // MOZDA BOLJE OVA IMPLEMENTACIJA
-  //
-  // list(list &&other){
-  // std::swap(head_, other.head_);
-  // std::swap(tail_, other.tail_);
-  // std::swap(size_, other.size_)
+  // list(list &&other)
+  //     : head_{other.head_}, tail_{other.tail_}, size_{other.size_} {
+  //   other.tail_ = other.head_ = 0;
+  //   other.size_ = 0;
   // }
   //
+  list(list &&other) {
+    std::swap(head_, other.head_);
+    std::swap(tail_, other.tail_);
+    std::swap(size_, other.size_);
+  }
 
   list &operator=(list &other) {
     if (this == &other) {
@@ -64,7 +62,6 @@ public:
     auto newNode = new node(std::forward<U>(element));
     size_++;
     if (head_ == nullptr) {
-
       tail_ = head_ = newNode;
       return;
     }
