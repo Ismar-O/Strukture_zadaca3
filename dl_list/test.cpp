@@ -2,8 +2,16 @@
 #include "doctest.h"
 #include "list.hpp"
 
-TEST_CASE("Default constructor") {
+template <typename T> void printList(list<T> &ls) {
+  std::cout << "*******" << std::endl;
+  for (auto &&el : ls) {
+    std::cout << el << " ";
+  }
+  std::cout << std::endl;
+  std::cout << "*******" << std::endl;
+}
 
+TEST_CASE("Default constructor") {
   list<char> list;
   bool is_true = list.size() == 0;
   CHECK(is_true);
@@ -13,7 +21,9 @@ TEST_CASE("Default constructor") {
   CHECK(head_ == nullptr);
 }
 TEST_CASE("Init list constructor") {
+  std::cout << "initializer list ctor" << std::endl;
   list<char> initCtor{'A', 'B', 'C'};
+  printList(initCtor);
   list<char>::Iterator it = initCtor.begin();
   bool is_true =
       *(it++) == 'A' && *(it++) == 'B' && *it == 'C' && initCtor.size() == 3;
@@ -31,8 +41,10 @@ TEST_CASE("List one element head/tail check") {
 }
 
 TEST_CASE("Copy constructor") {
+  std::cout << "Copy ctor" << std::endl;
   list<char> def{'A', 'B', 'C'};
   list<char> copyCtor(def);
+  printList(copyCtor);
   list<char>::Iterator it = copyCtor.begin();
 
   bool is_true =
@@ -41,8 +53,10 @@ TEST_CASE("Copy constructor") {
 }
 
 TEST_CASE("Copy operator") {
+  std::cout << "Copy operator" << std::endl;
   list<char> def{'A', 'B', 'C'};
   list<char> copyCtor = def;
+  printList(copyCtor);
   list<char>::Iterator it = copyCtor.begin();
 
   bool is_true =
